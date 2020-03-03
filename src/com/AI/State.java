@@ -11,6 +11,7 @@ public class State {
         this.side2 = side2;
         this.goal1 = goal1;
         this.goal2 = goal2;
+        this.turn = turn;
     }
 
     public int[] getSide1() {
@@ -31,5 +32,9 @@ public class State {
 
     public int getTurn() {
         return turn;
+    }
+
+    public void setTurn(int turn) {
+        this.turn = turn;
     }
 }
