@@ -9,5 +9,9 @@ public class Main {
 
 
     }
-    
+
+    public void printBoard(State state){
+
+    }
+
 }
