@@ -13,7 +13,11 @@ public class Main {
         Scanner input = new Scanner(System.in);
         int choice;
         while(true){
-            choice = input.nextInt();
+            while (true) {
+                choice = input.nextInt();
+                if (choice >= 0 && choice <= 5)
+                    break;
+            }
             if (currentState.getTurn() == 2){
                 choice += 7;
             }
