@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    static int DEPTH = 10;
+    static int DEPTH = 14;
     static int bestChoice = 0;
 
     public static void main(String[] args) {
@@ -51,7 +51,7 @@ public class Main {
                         currentState.getValue()
                 );
 
-                minimax(workingState);
+                minimax(workingState, -72, 72);
 
                 System.out.printf("Choosing %d as this is the freaking best\n", (bestChoice + 1));
                 currentState = turnOutcome(currentState, bestChoice + 7);
@@ -203,57 +203,71 @@ public class Main {
         return  turn;
     }
 
-    public static int minimax(State workingState){
+    public static int minimax(State workingState, int α, int β){
         State tempState;
         List<Integer> childResults = new ArrayList<>();
+        int bestPocket = 0;
 
         if (workingState.getDepth() == DEPTH){
             return workingState.getValue();
         }
-        for (int pocket = 0; pocket< workingState.getSide2().length; pocket++){
-            if (workingState.getSide2()[pocket] == 0) {
-                childResults.add(null);
-                continue;
-            }
-            if (workingState.getTurn() == 1){
-                tempState = turnOutcome(workingState, pocket);
-                childResults.add(minimax(tempState));
-            }
-            else {
-                tempState = turnOutcome(workingState, pocket + 7);
-                childResults.add(minimax(tempState));
-            }
-            workingState.getChildren().add(tempState);
-        }
 
-
-        for (State state: workingState.getChildren()){
-
-        }
-        int result;
+        int value;
+        int tempValue;
         if (workingState.getTurn() == 1){
-            result = 72;
-            for (int i = 0; i < childResults.size(); i++){
-                if (childResults.get(i) != null) {
-                    if (childResults.get(i) < result) {
-                        result = childResults.get(i);
-                        bestChoice = i;
-                    }
+            value = 72;
+
+            for (int pocket = 0; pocket< workingState.getSide2().length; pocket++){
+
+                if (workingState.getSide2()[pocket] == 0) {
+                    continue;
                 }
+
+                tempState = turnOutcome(workingState, pocket);
+
+                tempValue = minimax(tempState, α, β);
+
+                if (value > tempValue) {
+                    value = tempValue;
+                    bestPocket = pocket;
+                }
+
+                if (β > value)
+                    β = value;
+
+                if (α >= β)
+                    break; // α cutoff
+
             }
+
         }
         else{
-            result = -72;
-            for (int i = 0; i < childResults.size(); i++){
-                if (childResults.get(i) != null) {
-                    if (childResults.get(i) > result) {
-                        result = childResults.get(i);
-                        bestChoice = i;
-                    }
+            value = -72;
+            for (int pocket = 0; pocket< workingState.getSide2().length; pocket++){
+
+                if (workingState.getSide2()[pocket] == 0) {
+                    continue;
                 }
+
+                tempState = turnOutcome(workingState, pocket + 7);
+
+                tempValue = minimax(tempState, α, β);
+
+                if (value < tempValue) {
+                    value = tempValue;
+                    bestPocket = pocket;
+                }
+
+                if (α < value)
+                    α = value;
+
+                if (α >= β)
+                    break; // β cutoff
+
             }
         }
-        return result;
+        bestChoice = bestPocket;
+        return value;
     }
 
 

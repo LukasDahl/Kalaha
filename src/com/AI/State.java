@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class State {
-    List<State> children = new ArrayList<>();
     private int[] side1 = new int[6];
     private int[] side2 = new int[6];
     private int goal1 = 0, goal2 = 0;
@@ -78,7 +77,4 @@ public class State {
         this.value = value;
     }
 
-    public List<State> getChildren() {
-        return children;
-    }
 }
