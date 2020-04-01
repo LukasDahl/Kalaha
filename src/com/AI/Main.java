@@ -50,7 +50,7 @@ public class Main {
                         currentState.getDepth(),
                         currentState.getValue()
                 );
-
+                workingState.setDepth(0);
                 minimax(workingState, -72, 72);
 
                 System.out.printf("Choosing %d as this is the freaking best\n", (bestChoice + 1));
@@ -60,7 +60,6 @@ public class Main {
             }
 
             printBoard(currentState);
-            DEPTH++;
 
 
             gameover = true;
