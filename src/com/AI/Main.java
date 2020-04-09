@@ -216,7 +216,7 @@ public class Main {
                 else{
                     tempState.setGoal2(tempState.getGoal2() + tempState.getSide2()[i]);
                 }
-                tempState.getSide1()[i] = 0;
+                tempState.getSide2()[i] = 0;
             }
         }
 
