@@ -16,14 +16,11 @@ public class Main {
         int[] initSide = {6,6,6,6,6,6};
 
         State initState = new State(initSide, initSide.clone(), 0, 0 , 1, 0, 0);
-        State currentState = initState, tempState, workingState;
+        State currentState = initState, workingState;
         printBoard(initState);
         Scanner input = new Scanner(System.in);
         int choice;
         boolean gameover;
-        List<State> frontier = new ArrayList<>();
-        List<Integer> childResults;
-
 
         while(true){
 
@@ -74,8 +71,9 @@ public class Main {
 
             gameover = true;
             for (int i: currentState.getSide1()){
-                if(i > 0){
+                if (i > 0) {
                     gameover = false;
+                    break;
                 }
             }
             if (gameover){
@@ -84,8 +82,9 @@ public class Main {
 
             gameover = true;
             for (int i: currentState.getSide2()){
-                if(i > 0){
+                if (i > 0) {
                     gameover = false;
+                    break;
                 }
             }
             if (gameover){
@@ -97,7 +96,7 @@ public class Main {
     }
 
     public static void printBoard(State state){
-        System.out.printf(" ");
+        System.out.print(" ");
         for (int i = 5; i >= 0; i-- ) {
             System.out.printf("%3d", state.getSide2()[i]);
         }
@@ -116,16 +115,14 @@ public class Main {
         int goal1 = state.getGoal1(), goal2 = state.getGoal2();
         int handPosition;
         if (pocket < 6){
-
             hand = side1[pocket];
             side1[pocket] = 0;
-            handPosition = pocket;
         }
         else {
             hand = side2[pocket - 7];
             side2[pocket - 7] = 0;
-            handPosition = pocket;
         }
+        handPosition = pocket;
 
         while(hand > 0){
             handPosition++;
@@ -181,10 +178,7 @@ public class Main {
             }
             nextTurn = changeTurn(state.getTurn());
         }
-        else if (handPosition < 7){
-
-        }
-        else if (handPosition < 13){
+        else if (handPosition >= 7 && handPosition < 13){
             if (side2[handPosition-7] == 1){
                 if (state.getTurn() == 2){
                     goal2 += side2[handPosition-7] + side1[5-(handPosition-7)];
@@ -195,17 +189,15 @@ public class Main {
             nextTurn = changeTurn(state.getTurn());
 
         }
-        else {
-
-        }
 
         //DEFINE A STATE
         State tempState = new State(side1.clone(), side2.clone(), goal1, goal2, nextTurn, state.getDepth() + 1, goal2 - goal1);
 
         boolean gameover = true;
         for (int i: tempState.getSide1()){
-            if(i > 0){
+            if (i > 0) {
                 gameover = false;
+                break;
             }
         }
         if (gameover){
@@ -223,8 +215,9 @@ public class Main {
 
         gameover = true;
         for (int i: tempState.getSide2()){
-            if(i > 0){
+            if (i > 0) {
                 gameover = false;
+                break;
             }
         }
         if (gameover){
@@ -250,7 +243,6 @@ public class Main {
 
     public static int minimax(State workingState, int α, int β){
         State tempState;
-        List<Integer> childResults = new ArrayList<>();
         int bestPocket = 0;
 
         if (workingState.getDepth() == DEPTH){
