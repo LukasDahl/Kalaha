@@ -1,12 +1,9 @@
 package com.AI;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class State {
-    private int[] side1 = new int[6];
-    private int[] side2 = new int[6];
-    private int goal1 = 0, goal2 = 0;
+    private int[] side1;
+    private int[] side2;
+    private int goal1, goal2 ;
     private int turn;
     private int depth;
     private int value;
@@ -25,16 +22,8 @@ public class State {
         return side1;
     }
 
-    public void setSide1(int[] side1) {
-        this.side1 = side1;
-    }
-
     public int[] getSide2() {
         return side2;
-    }
-
-    public void setSide2(int[] side2) {
-        this.side2 = side2;
     }
 
     public int getGoal1() {
@@ -55,10 +44,6 @@ public class State {
 
     public int getTurn() {
         return turn;
-    }
-
-    public void setTurn(int turn) {
-        this.turn = turn;
     }
 
     public int getDepth() {
