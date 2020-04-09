@@ -318,7 +318,6 @@ public class Main {
             }
         }
         if (possibleMoves == 0){
-            System.out.println("HERE"+ workingState.getValue());
             return workingState.getValue();
         }
         bestChoice = bestPocket;
