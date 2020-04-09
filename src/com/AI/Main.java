@@ -9,7 +9,9 @@ public class Main {
 
     static int DEPTH = 14;
     static int bestChoice = 0;
-
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String[] ANSI_TURN = {"\u001B[32m", "\u001B[34m"};
     public static void main(String[] args) {
         int[] initSide = {6,6,6,6,6,6};
 
@@ -22,6 +24,7 @@ public class Main {
         List<State> frontier = new ArrayList<>();
         List<Integer> childResults;
 
+
         while(true){
 
 
@@ -33,14 +36,21 @@ public class Main {
                         choice = 6;
                         input = new Scanner(System.in);
                     }
-
-                    if (choice >= 0 && choice <= 5)
+                    if (choice >= 0 && choice <= 5){
+                        if (currentState.getSide1()[choice] == 0){
+                            System.out.printf("%sChoose a pocket with balls in%s\n", ANSI_RED, ANSI_RESET);
+                            continue;
+                        }
                         break;
+                    }
+                    System.out.printf("%sChoose a pocket between 1 and 6%s\n", ANSI_RED, ANSI_RESET);
+
                 }
                 currentState = turnOutcome(currentState, choice);
             }
             else{
                 //AI HERE PLS
+                System.out.printf("%sPlease wait while I calculate%s\n", ANSI_TURN[1], ANSI_RESET);
                 workingState = new State(
                         currentState.getSide1().clone(),
                         currentState.getSide2().clone(),
@@ -53,7 +63,7 @@ public class Main {
                 workingState.setDepth(0);
                 minimax(workingState, -72, 72);
 
-                System.out.printf("Choosing %d as this is the freaking best\n", (bestChoice + 1));
+                System.out.printf("%sChoosing %d as this is the freaking best%s\n", ANSI_TURN[1], (bestChoice + 1), ANSI_RESET);
                 currentState = turnOutcome(currentState, bestChoice + 7);
 
 
@@ -95,7 +105,7 @@ public class Main {
         for (int i: state.getSide1()) {
             System.out.printf("%3d", i);
         }
-        System.out.printf("\nIt is now player %d's turn\n", state.getTurn());
+        System.out.printf("\n%sIt is now player %d's turn%s\n", ANSI_TURN[state.getTurn()-1], state.getTurn(), ANSI_RESET);
 
     }
 
@@ -105,7 +115,6 @@ public class Main {
         int[] side2 = state.getSide2().clone();
         int goal1 = state.getGoal1(), goal2 = state.getGoal2();
         int handPosition;
-      //  System.out.println(state.getTurn() + "");
         if (pocket < 6){
 
             hand = side1[pocket];
@@ -193,6 +202,42 @@ public class Main {
         //DEFINE A STATE
         State tempState = new State(side1.clone(), side2.clone(), goal1, goal2, nextTurn, state.getDepth() + 1, goal2 - goal1);
 
+        boolean gameover = true;
+        for (int i: tempState.getSide1()){
+            if(i > 0){
+                gameover = false;
+            }
+        }
+        if (gameover){
+            for (int i = 0; i < tempState.getSide2().length; i++) {
+                if (state.getTurn() == 1){
+                    tempState.setGoal1(tempState.getGoal1() + tempState.getSide2()[i]);
+                }
+                else{
+                    tempState.setGoal2(tempState.getGoal2() + tempState.getSide2()[i]);
+                }
+                tempState.getSide1()[i] = 0;
+            }
+        }
+
+        gameover = true;
+        for (int i: tempState.getSide2()){
+            if(i > 0){
+                gameover = false;
+            }
+        }
+        if (gameover){
+            for (int i = 0; i < tempState.getSide1().length; i++) {
+                if (state.getTurn() == 1){
+                    tempState.setGoal1(tempState.getGoal1() + tempState.getSide1()[i]);
+                }
+                else{
+                    tempState.setGoal2(tempState.getGoal2() + tempState.getSide1()[i]);
+                }
+                tempState.getSide1()[i] = 0;
+
+            }
+        }
 
         return tempState;
     }
@@ -213,6 +258,8 @@ public class Main {
 
         int value;
         int tempValue;
+        int possibleMoves = 0;
+
         if (workingState.getTurn() == 1){
             value = 72;
 
@@ -221,6 +268,8 @@ public class Main {
                 if (workingState.getSide2()[pocket] == 0) {
                     continue;
                 }
+
+                possibleMoves++;
 
                 tempState = turnOutcome(workingState, pocket);
 
@@ -248,6 +297,8 @@ public class Main {
                     continue;
                 }
 
+                possibleMoves++;
+
                 tempState = turnOutcome(workingState, pocket + 7);
 
                 tempValue = minimax(tempState, α, β);
@@ -264,6 +315,9 @@ public class Main {
                     break; // β cutoff
 
             }
+        }
+        if (possibleMoves == 0){
+            return workingState.getValue();
         }
         bestChoice = bestPocket;
         return value;
