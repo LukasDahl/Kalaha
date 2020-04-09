@@ -218,6 +218,7 @@ public class Main {
                 }
                 tempState.getSide2()[i] = 0;
             }
+            tempState.setValue(tempState.getGoal2()-tempState.getGoal1());
         }
 
         gameover = true;
@@ -235,8 +236,8 @@ public class Main {
                     tempState.setGoal2(tempState.getGoal2() + tempState.getSide1()[i]);
                 }
                 tempState.getSide1()[i] = 0;
-
             }
+            tempState.setValue(tempState.getGoal2()-tempState.getGoal1());
         }
 
         return tempState;
@@ -317,6 +318,7 @@ public class Main {
             }
         }
         if (possibleMoves == 0){
+            System.out.println("HERE"+ workingState.getValue());
             return workingState.getValue();
         }
         bestChoice = bestPocket;
